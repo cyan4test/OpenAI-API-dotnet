@@ -1,3 +1,4 @@
++ HTTPHeaders
 # C#/.NET SDK for accessing the OpenAI APIs, including GPT-3.5/4, GPT-3.5/4-Turbo, and DALL-E 2/3
 
 A simple C# .NET wrapper library to use with OpenAI's API.  More context [on my blog](https://rogerpincombe.com/openai-dotnet-api).  This is an unofficial wrapper library around the OpenAI API.  I am not affiliated with OpenAI and this library is not endorsed or supported by them.
