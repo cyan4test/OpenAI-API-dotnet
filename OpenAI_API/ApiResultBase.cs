@@ -55,5 +55,11 @@ namespace OpenAI_API
 		/// </summary>
 		[JsonIgnore]
 		public string OpenaiVersion { get; internal set; }
+
+		/// <summary>
+		/// HTTP Headers
+		/// </summary>
+		[JsonIgnore]
+        	public HttpResponseHeaders Headers { get; internal set; } //#!!20240418
 	}
 }
