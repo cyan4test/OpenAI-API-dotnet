@@ -422,7 +422,7 @@ namespace OpenAI_API
 						res.OpenaiVersion = openaiVersion;
 						if (string.IsNullOrEmpty(res.Model))
 							res.Model = modelFromHeaders;
-
+						res.Headers = response.Headers; //#!!20240418
 						yield return res;
 					}
 				}
