@@ -61,6 +61,6 @@ namespace OpenAI_API
 		/// HTTP Headers
 		/// </summary>
 		[JsonIgnore]
-        	public HttpResponseHeaders Headers { get; internal set; } //#!!20240418
+         public HttpResponseHeaders Headers { get; internal set; } //#!!20240418
 	}
 }
