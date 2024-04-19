@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using OpenAI_API.Models;
 using System;
+using System.Net.Http.Headers;
 
 namespace OpenAI_API
 {
