@@ -423,7 +423,9 @@ namespace OpenAI_API
 						if (string.IsNullOrEmpty(res.Model))
 							res.Model = modelFromHeaders;
 						res.Headers = response.Headers; //#!!20240418
-						yield return res;
+						res.StatusCode = response.StatusCode;//#!!20240418
+                        res.RawLine = line;
+                        yield return res;
 					}
 				}
 			}

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using OpenAI_API.Models;
 using System;
+using System.Net;
 using System.Net.Http.Headers;
 
 namespace OpenAI_API
@@ -61,6 +62,24 @@ namespace OpenAI_API
 		/// HTTP Headers
 		/// </summary>
 		[JsonIgnore]
-         public HttpResponseHeaders Headers { get; internal set; } //#!!20240418
-	}
+        public HttpResponseHeaders Headers { get; internal set; } //#!!20240418
+
+        /// <summary>
+        /// HTTP The status code of the HTTP response.
+        /// </summary>
+        [JsonIgnore]
+        public HttpStatusCode StatusCode { get; internal set; } //#!!20240418
+                                                                  //     
+        /// <summary>
+        /// raw lines of the response
+        /// </summary>
+        [JsonIgnore]
+        public string RawLine { get; internal set; } //#!!20240418
+
+        /// <summary>
+        /// error from respose
+        /// </summary>
+        [JsonProperty("error")]
+        public string Error { get; set; }//#!!20240418
+    }
 }
