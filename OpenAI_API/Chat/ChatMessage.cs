@@ -98,8 +98,10 @@ namespace OpenAI_API.Chat
 						items.Add(new ContentItem(image));
 					}
 				}
+				if (ContentItems_Additional!=null)
+                    items.AddRange(ContentItems_Additional); //#!!20240421 add missing multiple content items:
 
-				return items;
+                return items;
 			}
 			set
 			{
@@ -116,11 +118,16 @@ namespace OpenAI_API.Chat
 				}
 			}
 		}
-
 		/// <summary>
-		/// An optional name of the user in a multi-user chat 
+		/// #!!20240421 add missing multiple content items: see TS ChatCompletionContentPart[]
 		/// </summary>
-		[JsonProperty("name")]
+		[JsonIgnore]
+		public IList<ContentItem> ContentItems_Additional = null; // new List<ContentItem>();
+
+        /// <summary>
+        /// An optional name of the user in a multi-user chat 
+        /// </summary>
+        [JsonProperty("name")]
 		public string Name { get; set; }
 
 		/// <summary>
@@ -129,12 +136,13 @@ namespace OpenAI_API.Chat
 		[JsonIgnore]
 		public List<ImageInput> Images { get; set; } = new List<ImageInput>();
 
-		/// <summary>
-		/// This is a helper class to serialize the content of the message to JSON
-		/// </summary>
-		internal class ContentItem
-		{
-			private string text;
+        /// <summary>
+        /// This is a helper class to serialize the content of the message to JSON
+        /// </summary>
+        //internal class ContentItem
+        public class ContentItem //#!!20240421 add missing multiple content items:
+        {
+            private string text;
 			private ImageInput image;
 
 			/// <summary>
