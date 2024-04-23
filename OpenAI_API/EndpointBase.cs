@@ -5,16 +5,44 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace OpenAI_API
 {
-	/// <summary>
-	/// A base object for any OpenAI API endpoint, encompassing common functionality
-	/// </summary>
-	public abstract class EndpointBase
+
+    /// <summary>
+    /// #!!20240418: HttpHeadersExtensions
+    /// </summary>
+	public static class HttpHeadersExtensions 
+    {
+        //public static void AddCustomHeader(this HttpHeaders headers, string name, string value)
+        //{
+        //    // Add your custom logic here
+        //    headers.Add(name, value);
+        //}
+
+        /// <summary>
+        /// #!!20240418: GetValuesOrNull
+        /// </summary>
+        public static IEnumerable<string> GetValuesOrNull(this HttpHeaders headers, string descriptor)
+        {
+            if (headers.TryGetValues(descriptor, out IEnumerable<string>? values))
+            {
+                return values;
+            }
+
+			return new List<string> { null };
+        }
+    }
+
+
+    /// <summary>
+    /// A base object for any OpenAI API endpoint, encompassing common functionality
+    /// </summary>
+    public abstract class EndpointBase
 	{
 		private const string UserAgent = "okgodoit/dotnet_openai_api";
 
@@ -380,13 +408,19 @@ namespace OpenAI_API
 
 			try
 			{
-				organization = response.Headers.GetValues("Openai-Organization").FirstOrDefault();
-				requestId = response.Headers.GetValues("X-Request-ID").FirstOrDefault();
-				processingTime = TimeSpan.FromMilliseconds(int.Parse(response.Headers.GetValues("Openai-Processing-Ms").First()));
-				openaiVersion = response.Headers.GetValues("Openai-Version").FirstOrDefault();
-				modelFromHeaders = response.Headers.GetValues("Openai-Model").FirstOrDefault();
-			}
-			catch (Exception e)
+				//organization = response.Headers.GetValues("Openai-Organization").FirstOrDefault();
+				//requestId = response.Headers.GetValues("X-Request-ID").FirstOrDefault();
+				//processingTime = TimeSpan.FromMilliseconds(int.Parse(response.Headers.GetValues("Openai-Processing-Ms").First()));
+				//openaiVersion = response.Headers.GetValues("Openai-Version").FirstOrDefault();
+				//modelFromHeaders = response.Headers.GetValues("Openai-Model").FirstOrDefault(); // throws exception
+
+                organization = response.Headers.GetValuesOrNull("Openai-Organization").FirstOrDefault();// #!!20240418 >>
+                requestId = response.Headers.GetValuesOrNull("X-Request-ID").FirstOrDefault();
+                openaiVersion = response.Headers.GetValuesOrNull("Openai-Version").FirstOrDefault();
+                modelFromHeaders = response.Headers.GetValuesOrNull("Openai-Model").FirstOrDefault();
+                processingTime = TimeSpan.FromMilliseconds(int.Parse(response.Headers.GetValues("Openai-Processing-Ms").First())); // make this last, as it may throw an exception
+            }
+            catch (Exception e)
 			{
 				Debug.Print($"Issue parsing metadata of OpenAi Response.  Url: {url}, Error: {e.ToString()}.  This is probably ignorable.");
 			}
@@ -424,7 +458,7 @@ namespace OpenAI_API
 							res.Model = modelFromHeaders;
 						res.Headers = response.Headers; //#!!20240418
 						res.StatusCode = response.StatusCode;//#!!20240418
-                        res.RawLine = line;
+                        res.RawLine = line; //{"id":"chatcmpl-9H4ZlfwpPovvOWzKLfIszBV7vHvhq","object":"chat.completion.chunk","created":1713856193,"model":"gpt-4-1106-vision-preview","system_fingerprint":null,"choices":[{"index":0,"delta":{"role":"assistant","content":""},"logprobs":null,"finish_reason":null}]}
                         yield return res;
 					}
 				}
