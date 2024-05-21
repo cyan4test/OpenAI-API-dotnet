@@ -13,263 +13,263 @@ using System.Threading.Tasks;
 
 namespace OpenAI_Tests
 {
-	public class ChatEndpointTests
-	{
-		[SetUp]
-		public void Setup()
-		{
-			OpenAI_API.APIAuthentication.Default = new OpenAI_API.APIAuthentication(Environment.GetEnvironmentVariable("TEST_OPENAI_SECRET_KEY"));
-		}
+    public class ChatEndpointTests
+    {
+        [SetUp]
+        public void Setup()
+        {
+            OpenAI_API.APIAuthentication.Default = new OpenAI_API.APIAuthentication(Environment.GetEnvironmentVariable("TEST_OPENAI_SECRET_KEY"));
+        }
 
-		[Test]
-		public void BasicCompletion()
-		{
-			var api = new OpenAI_API.OpenAIAPI();
+        [Test]
+        public void BasicCompletion()
+        {
+            var api = new OpenAI_API.OpenAIAPI();
 
-			Assert.IsNotNull(api.Chat);
+            Assert.IsNotNull(api.Chat);
 
-			var results = api.Chat.CreateChatCompletionAsync(new ChatRequest()
-			{
-				Model = Model.ChatGPTTurbo,
-				Temperature = 0.1,
-				MaxTokens = 5,
-				Messages = new ChatMessage[] {
-					new ChatMessage(ChatMessageRole.User, "Hello!")
-				}
-			}).Result;
-			Assert.IsNotNull(results);
-			if (results.CreatedUnixTime.HasValue)
-			{
-				Assert.NotZero(results.CreatedUnixTime.Value);
-				Assert.NotNull(results.Created);
-				Assert.Greater(results.Created.Value, new DateTime(2018, 1, 1));
-				Assert.Less(results.Created.Value, DateTime.Now.AddDays(1));
-			}
-			else
-			{
-				Assert.Null(results.Created);
-			}
-			Assert.NotNull(results.Object);
-			Assert.NotNull(results.Choices);
-			Assert.NotZero(results.Choices.Count);
-			Assert.AreEqual(ChatMessageRole.Assistant, results.Choices[0].Message.Role);
-			Assert.That(results.Choices.All(c => c.Message.Role.Equals(ChatMessageRole.Assistant)));
-			Assert.That(results.Choices.All(c => c.Message.TextContent.Length > 1));
-		}
-		[Test]
-		public void BasicCompletionWithNames()
-		{
-			var api = new OpenAI_API.OpenAIAPI();
+            var results = api.Chat.CreateChatCompletionAsync(new ChatRequest()
+            {
+                Model = Model.ChatGPTTurbo,
+                Temperature = 0.1,
+                MaxTokens = 5,
+                Messages = new ChatMessage[] {
+                    new ChatMessage(ChatMessageRole.User, "Hello!")
+                }
+            }).Result;
+            Assert.IsNotNull(results);
+            if (results.CreatedUnixTime.HasValue)
+            {
+                Assert.NotZero(results.CreatedUnixTime.Value);
+                Assert.NotNull(results.Created);
+                Assert.Greater(results.Created.Value, new DateTime(2018, 1, 1));
+                Assert.Less(results.Created.Value, DateTime.Now.AddDays(1));
+            }
+            else
+            {
+                Assert.Null(results.Created);
+            }
+            Assert.NotNull(results.Object);
+            Assert.NotNull(results.Choices);
+            Assert.NotZero(results.Choices.Count);
+            Assert.AreEqual(ChatMessageRole.Assistant, results.Choices[0].Message.Role);
+            Assert.That(results.Choices.All(c => c.Message.Role.Equals(ChatMessageRole.Assistant)));
+            Assert.That(results.Choices.All(c => c.Message.TextContent.Length > 1));
+        }
+        [Test]
+        public void BasicCompletionWithNames()
+        {
+            var api = new OpenAI_API.OpenAIAPI();
 
-			Assert.IsNotNull(api.Chat);
+            Assert.IsNotNull(api.Chat);
 
-			var results = api.Chat.CreateChatCompletionAsync(new ChatRequest()
-			{
-				Model = Model.ChatGPTTurbo,
-				Temperature = 0.1,
-				MaxTokens = 5,
-				Messages = new ChatMessage[] {
-					new ChatMessage(ChatMessageRole.System, "You are the moderator in this workplace chat.  Answer any questions asked of the participants."),
-					new ChatMessage(ChatMessageRole.User, "Hello everyone") { Name="John"},
-					new ChatMessage(ChatMessageRole.User, "Good morning all")  { Name="Edward"},
-					new ChatMessage(ChatMessageRole.User, "Is John here?  Answer yes or no.") { Name = "Cindy" }
-					}
-			}).Result;
-			Assert.IsNotNull(results);
-			if (results.CreatedUnixTime.HasValue)
-			{
-				Assert.NotZero(results.CreatedUnixTime.Value);
-				Assert.NotNull(results.Created);
-				Assert.Greater(results.Created.Value, new DateTime(2018, 1, 1));
-				Assert.Less(results.Created.Value, DateTime.Now.AddDays(1));
-			}
-			else
-			{
-				Assert.Null(results.Created);
-			}
-			Assert.NotNull(results.Object);
-			Assert.NotNull(results.Choices);
-			Assert.NotZero(results.Choices.Count);
-			Assert.AreEqual(ChatMessageRole.Assistant, results.Choices[0].Message.Role);
-			Assert.That(results.Choices.All(c => c.Message.Role.Equals(ChatMessageRole.Assistant)));
-			Assert.That(results.Choices.All(c => c.Message.TextContent.Length > 1));
-			Assert.That(results.ToString().ToLower().Contains("yes"));
-		}
-		[Test]
-		public void SimpleCompletion()
-		{
-			var api = new OpenAI_API.OpenAIAPI();
+            var results = api.Chat.CreateChatCompletionAsync(new ChatRequest()
+            {
+                Model = Model.ChatGPTTurbo,
+                Temperature = 0.1,
+                MaxTokens = 5,
+                Messages = new ChatMessage[] {
+                    new ChatMessage(ChatMessageRole.System, "You are the moderator in this workplace chat.  Answer any questions asked of the participants."),
+                    new ChatMessage(ChatMessageRole.User, "Hello everyone") { Name="John"},
+                    new ChatMessage(ChatMessageRole.User, "Good morning all")  { Name="Edward"},
+                    new ChatMessage(ChatMessageRole.User, "Is John here?  Answer yes or no.") { Name = "Cindy" }
+                    }
+            }).Result;
+            Assert.IsNotNull(results);
+            if (results.CreatedUnixTime.HasValue)
+            {
+                Assert.NotZero(results.CreatedUnixTime.Value);
+                Assert.NotNull(results.Created);
+                Assert.Greater(results.Created.Value, new DateTime(2018, 1, 1));
+                Assert.Less(results.Created.Value, DateTime.Now.AddDays(1));
+            }
+            else
+            {
+                Assert.Null(results.Created);
+            }
+            Assert.NotNull(results.Object);
+            Assert.NotNull(results.Choices);
+            Assert.NotZero(results.Choices.Count);
+            Assert.AreEqual(ChatMessageRole.Assistant, results.Choices[0].Message.Role);
+            Assert.That(results.Choices.All(c => c.Message.Role.Equals(ChatMessageRole.Assistant)));
+            Assert.That(results.Choices.All(c => c.Message.TextContent.Length > 1));
+            Assert.That(results.ToString().ToLower().Contains("yes"));
+        }
+        [Test]
+        public void SimpleCompletion()
+        {
+            var api = new OpenAI_API.OpenAIAPI();
 
-			Assert.IsNotNull(api.Chat);
+            Assert.IsNotNull(api.Chat);
 
-			var results = api.Chat.CreateChatCompletionAsync("Hello!").Result;
-			Assert.IsNotNull(results);
-			if (results.CreatedUnixTime.HasValue)
-			{
-				Assert.NotZero(results.CreatedUnixTime.Value);
-				Assert.NotNull(results.Created);
-				Assert.Greater(results.Created.Value, new DateTime(2018, 1, 1));
-				Assert.Less(results.Created.Value, DateTime.Now.AddDays(1));
-			}
-			else
-			{
-				Assert.Null(results.Created);
-			}
-			Assert.NotNull(results.Object);
-			Assert.NotNull(results.Choices);
-			Assert.NotZero(results.Choices.Count);
-			Assert.AreEqual(ChatMessageRole.Assistant, results.Choices[0].Message.Role);
-			Assert.That(results.Choices.All(c => c.Message.Role.Equals(ChatMessageRole.Assistant)));
-			Assert.That(results.Choices.All(c => c.Message.Role == ChatMessageRole.Assistant));
-			Assert.That(results.Choices.All(c => c.Message.TextContent.Length > 1));
-			Assert.IsNotEmpty(results.ToString());
-		}
+            var results = api.Chat.CreateChatCompletionAsync("Hello!").Result;
+            Assert.IsNotNull(results);
+            if (results.CreatedUnixTime.HasValue)
+            {
+                Assert.NotZero(results.CreatedUnixTime.Value);
+                Assert.NotNull(results.Created);
+                Assert.Greater(results.Created.Value, new DateTime(2018, 1, 1));
+                Assert.Less(results.Created.Value, DateTime.Now.AddDays(1));
+            }
+            else
+            {
+                Assert.Null(results.Created);
+            }
+            Assert.NotNull(results.Object);
+            Assert.NotNull(results.Choices);
+            Assert.NotZero(results.Choices.Count);
+            Assert.AreEqual(ChatMessageRole.Assistant, results.Choices[0].Message.Role);
+            Assert.That(results.Choices.All(c => c.Message.Role.Equals(ChatMessageRole.Assistant)));
+            Assert.That(results.Choices.All(c => c.Message.Role == ChatMessageRole.Assistant));
+            Assert.That(results.Choices.All(c => c.Message.TextContent.Length > 1));
+            Assert.IsNotEmpty(results.ToString());
+        }
 
-		[TestCase("gpt-3.5-turbo")]
-		[TestCase("gpt-4")]
-		[TestCase("gpt-4-turbo-preview")]
-		public void ChatBackAndForth(string model)
-		{
-			var api = new OpenAI_API.OpenAIAPI();
+        [TestCase("gpt-3.5-turbo")]
+        [TestCase("gpt-4")]
+        [TestCase("gpt-4-turbo-preview")]
+        public void ChatBackAndForth(string model)
+        {
+            var api = new OpenAI_API.OpenAIAPI();
 
-			var chat = api.Chat.CreateConversation();
-			chat.Model = model;
-			chat.RequestParameters.Temperature = 0;
+            var chat = api.Chat.CreateConversation();
+            chat.Model = model;
+            chat.RequestParameters.Temperature = 0;
 
-			chat.AppendSystemMessage("You are a teacher who helps children understand if things are animals or not.  If the user tells you an animal, you say \"yes\".  If the user tells you something that is not an animal, you say \"no\".  You only ever respond with \"yes\" or \"no\".  You do not say anything else.");
-			chat.AppendUserInput("Is this an animal? Cat");
-			chat.AppendExampleChatbotOutput("Yes");
-			chat.AppendUserInput("Is this an animal? House");
-			chat.AppendExampleChatbotOutput("No");
-			chat.AppendUserInput("Is this an animal? Dog");
-			string res = chat.GetResponseFromChatbotAsync().Result;
-			Assert.NotNull(res);
-			Assert.IsNotEmpty(res);
-			Assert.AreEqual("Yes", res.Trim());
-			chat.AppendUserInput("Is this an animal? Chair");
-			res = chat.GetResponseFromChatbotAsync().Result;
-			Assert.NotNull(res);
-			Assert.IsNotEmpty(res);
-			Assert.AreEqual("No", res.Trim());
-		}
+            chat.AppendSystemMessage("You are a teacher who helps children understand if things are animals or not.  If the user tells you an animal, you say \"yes\".  If the user tells you something that is not an animal, you say \"no\".  You only ever respond with \"yes\" or \"no\".  You do not say anything else.");
+            chat.AppendUserInput("Is this an animal? Cat");
+            chat.AppendExampleChatbotOutput("Yes");
+            chat.AppendUserInput("Is this an animal? House");
+            chat.AppendExampleChatbotOutput("No");
+            chat.AppendUserInput("Is this an animal? Dog");
+            string res = chat.GetResponseFromChatbotAsync().Result;
+            Assert.NotNull(res);
+            Assert.IsNotEmpty(res);
+            Assert.AreEqual("Yes", res.Trim());
+            chat.AppendUserInput("Is this an animal? Chair");
+            res = chat.GetResponseFromChatbotAsync().Result;
+            Assert.NotNull(res);
+            Assert.IsNotEmpty(res);
+            Assert.AreEqual("No", res.Trim());
+        }
 
-		[TestCase(false)]
-		[TestCase(true)]
-		[TestCase(null)]
-		public void ChatTooLong(bool? addTruncationHandler)
-		{
-			var api = new OpenAI_API.OpenAIAPI();
+        [TestCase(false)]
+        [TestCase(true)]
+        [TestCase(null)]
+        public void ChatTooLong(bool? addTruncationHandler)
+        {
+            var api = new OpenAI_API.OpenAIAPI();
 
-			var chat = api.Chat.CreateConversation();
-			chat.Model = "gpt-3.5-turbo-0613";
-			chat.RequestParameters.Temperature = 0;
+            var chat = api.Chat.CreateConversation();
+            chat.Model = "gpt-3.5-turbo-0613";
+            chat.RequestParameters.Temperature = 0;
 
-			if (addTruncationHandler == true)
-			{
-				chat.OnTruncationNeeded += (sender, args) =>
-				{
-					for (int i = 0; i < args.Count; i++)
-					{
-						if (args[i].Role != ChatMessageRole.System)
-						{
-							args.RemoveAt(i);
-							return;
-						}
-					}
-				};
-			}
-			else if (addTruncationHandler == false)
-			{
-				chat.AutoTruncateOnContextLengthExceeded = false;
-			}
+            if (addTruncationHandler == true)
+            {
+                chat.OnTruncationNeeded += (sender, args) =>
+                {
+                    for (int i = 0; i < args.Count; i++)
+                    {
+                        if (args[i].Role != ChatMessageRole.System)
+                        {
+                            args.RemoveAt(i);
+                            return;
+                        }
+                    }
+                };
+            }
+            else if (addTruncationHandler == false)
+            {
+                chat.AutoTruncateOnContextLengthExceeded = false;
+            }
 
-			AddLongExampleToChat(chat);
+            AddLongExampleToChat(chat);
 
-			if (addTruncationHandler == false)
-			{
-				// it should fail because the response is too long
-				Assert.Throws<AggregateException>(() => chat.GetResponseFromChatbotAsync().Wait());
-			}
-			else
-			{
-				string res = chat.GetResponseFromChatbotAsync().Result;
-				Assert.IsTrue(res.Contains("Rayleigh"));
-				Assert.AreEqual(3260,chat.MostRecentApiResult.Usage.PromptTokens);
-			}
-		}
+            if (addTruncationHandler == false)
+            {
+                // it should fail because the response is too long
+                Assert.Throws<AggregateException>(() => chat.GetResponseFromChatbotAsync().Wait());
+            }
+            else
+            {
+                string res = chat.GetResponseFromChatbotAsync().Result;
+                Assert.IsTrue(res.Contains("Rayleigh"));
+                Assert.AreEqual(3260, chat.MostRecentApiResult.Usage.PromptTokens);
+            }
+        }
 
 
-		[TestCase(false)]
-		[TestCase(true)]
-		[TestCase(null)]
-		public async Task ChatTooLongStreaming(bool? addTruncationHandler)
-		{
-			var api = new OpenAI_API.OpenAIAPI();
+        [TestCase(false)]
+        [TestCase(true)]
+        [TestCase(null)]
+        public async Task ChatTooLongStreaming(bool? addTruncationHandler)
+        {
+            var api = new OpenAI_API.OpenAIAPI();
 
-			var chat = api.Chat.CreateConversation();
-			chat.Model = "gpt-3.5-turbo-0613";
-			chat.RequestParameters.Temperature = 0;
+            var chat = api.Chat.CreateConversation();
+            chat.Model = "gpt-3.5-turbo-0613";
+            chat.RequestParameters.Temperature = 0;
 
-			if (addTruncationHandler == true)
-			{
-				chat.OnTruncationNeeded += (sender, args) =>
-				{
-					for (int i = 0; i < args.Count; i++)
-					{
-						if (args[i].Role != ChatMessageRole.System)
-						{
-							args.RemoveAt(i);
-							return;
-						}
-					}
-				};
-			}
-			else if (addTruncationHandler == false)
-			{
-				chat.AutoTruncateOnContextLengthExceeded = false;
-			}
+            if (addTruncationHandler == true)
+            {
+                chat.OnTruncationNeeded += (sender, args) =>
+                {
+                    for (int i = 0; i < args.Count; i++)
+                    {
+                        if (args[i].Role != ChatMessageRole.System)
+                        {
+                            args.RemoveAt(i);
+                            return;
+                        }
+                    }
+                };
+            }
+            else if (addTruncationHandler == false)
+            {
+                chat.AutoTruncateOnContextLengthExceeded = false;
+            }
 
-			AddLongExampleToChat(chat);
+            AddLongExampleToChat(chat);
 
-			if (addTruncationHandler == false)
-			{
-				// it should fail because the response is too long
-				Assert.Throws<AggregateException>(() => chat.StreamResponseFromChatbotAsync(s=>s.ToString()).Wait());
-			}
-			else
-			{
-				string result = "";
-				int streamParts = 0;
+            if (addTruncationHandler == false)
+            {
+                // it should fail because the response is too long
+                Assert.Throws<AggregateException>(() => chat.StreamResponseFromChatbotAsync(s => s.ToString()).Wait());
+            }
+            else
+            {
+                string result = "";
+                int streamParts = 0;
 
-				await foreach (var streamResultPart in chat.StreamResponseEnumerableFromChatbotAsync())
-				{
-					result += streamResultPart;
-					streamParts++;
-				}
+                await foreach (var streamResultPart in chat.StreamResponseEnumerableFromChatbotAsync())
+                {
+                    result += streamResultPart;
+                    streamParts++;
+                }
 
-				Assert.NotNull(result);
-				Assert.IsNotEmpty(result);
-				Assert.That(result.Contains("Rayleigh"));
-				Assert.Greater(result.Length, 200);
-				Assert.Greater(streamParts, 5);
+                Assert.NotNull(result);
+                Assert.IsNotEmpty(result);
+                Assert.That(result.Contains("Rayleigh"));
+                Assert.Greater(result.Length, 200);
+                Assert.Greater(streamParts, 5);
 
-				Assert.AreEqual(ChatMessageRole.User, chat.Messages.Last().Role);
-				Assert.AreEqual(result, chat.Messages.Last().TextContent);
-			}
-		}
+                Assert.AreEqual(ChatMessageRole.User, chat.Messages.Last().Role);
+                Assert.AreEqual(result, chat.Messages.Last().TextContent);
+            }
+        }
 
-		/// <summary>
-		/// This adds a very long chat history that exceeds the prompt token limit
-		/// </summary>
-		/// <param name="chat">The chat to add the examples to</param>
-		private static void AddLongExampleToChat(Conversation chat)
-		{
-			chat.AppendSystemMessage("You are a helpful assistant who is really good at explaining things to students.");
+        /// <summary>
+        /// This adds a very long chat history that exceeds the prompt token limit
+        /// </summary>
+        /// <param name="chat">The chat to add the examples to</param>
+        private static void AddLongExampleToChat(Conversation chat)
+        {
+            chat.AppendSystemMessage("You are a helpful assistant who is really good at explaining things to students.");
 
-			chat.AppendUserInput("Please explain how mountains are formed in great detail");
+            chat.AppendUserInput("Please explain how mountains are formed in great detail");
 
-			// the following example text is taken from wikipedia
-			chat.AppendExampleChatbotOutput(@"Mountain formation refers to the geological processes that underlie the formation of mountains. These processes are associated with large-scale movements of the Earth's crust (tectonic plates). Folding, faulting, volcanic activity, igneous intrusion and metamorphism can all be parts of the orogenic process of mountain building. The formation of mountains is not necessarily related to the geological structures found on it.
+            // the following example text is taken from wikipedia
+            chat.AppendExampleChatbotOutput(@"Mountain formation refers to the geological processes that underlie the formation of mountains. These processes are associated with large-scale movements of the Earth's crust (tectonic plates). Folding, faulting, volcanic activity, igneous intrusion and metamorphism can all be parts of the orogenic process of mountain building. The formation of mountains is not necessarily related to the geological structures found on it.
 The understanding of specific landscape features in terms of the underlying tectonic processes is called tectonic geomorphology, and the study of geologically young or ongoing processes is called neotectonics.
 From the late 18th century until its replacement by plate tectonics in the 1960s, geosyncline theory was used to explain much mountain-building.
 Types of mountains
@@ -296,10 +296,10 @@ Hotspot volcanoes
 Hotspots are supplied by a magma source in the Earth's mantle called a mantle plume. Although originally attributed to a melting of subducted oceanic crust, recent evidence belies this connection. The mechanism for plume formation remains a research topic.
 Fault blocks
 Several movements of the Earth's crust that lead to mountains are associated with faults. These movements actually are amenable to analysis that can predict, for example, the height of a raised block and the width of an intervening rift between blocks using the rheology of the layers and the forces of isostasy. Early bent plate models predicting fractures and fault movements have evolved into today's kinematic and flexural models.");
-			chat.AppendUserInput("Explain how a car engine works in great detail");
+            chat.AppendUserInput("Explain how a car engine works in great detail");
 
-			// the following example text is taken from wikipedia
-			chat.AppendExampleChatbotOutput(@"There are a wide variety of propulsion systems available or potentially available for automobiles and other vehicles. Options included internal combustion engines fueled by petrol, diesel, propane, or natural gas; hybrid vehicles, plug-in hybrids, fuel cell vehicles fueled by hydrogen and all electric cars. Fueled vehicles seem to have the advantage due to the limited range and high cost of batteries. Some options required construction of a network of fueling or charging stations. With no compelling advantage for any particular option, car makers pursued parallel development tracks using a variety of options. Reducing the weight of vehicles was one strategy being employed.
+            // the following example text is taken from wikipedia
+            chat.AppendExampleChatbotOutput(@"There are a wide variety of propulsion systems available or potentially available for automobiles and other vehicles. Options included internal combustion engines fueled by petrol, diesel, propane, or natural gas; hybrid vehicles, plug-in hybrids, fuel cell vehicles fueled by hydrogen and all electric cars. Fueled vehicles seem to have the advantage due to the limited range and high cost of batteries. Some options required construction of a network of fueling or charging stations. With no compelling advantage for any particular option, car makers pursued parallel development tracks using a variety of options. Reducing the weight of vehicles was one strategy being employed.
 Recent developments
 The use of high-technology (such as electronic engine control units) in advanced designs resulting from substantial investments in development research by European countries and Japan seemed to give an advantage to them over Chinese automakers and parts suppliers who, as of 2013, had low development budgets and lacked capacity to produce parts for high-tech engine and power train designs.
 Characteristics
@@ -322,9 +322,9 @@ Main article: Electric motor
 Electric vehicles seemed to be the most viable option, similar to the steam automobiles. It was first invented in the early 1800s, and became a viable option of transportation around 1890, when William Morrison created the first electric car that traveled 14 miles per hour. The electric cars offered low pollution and a soundless ride, unlike their gasoline counterparts. The greatest downside of electric cars was the range. The typical electric car could reach around 20 miles before requiring a recharge. Manufacturers could not increase the number of batteries, due to the bulkiness of the batteries at the time. Without an incentive to purchase the electric automobiles, gas automobiles was the most viable option at the time.
 Electric cars use batteries to store electricity which is used to power electric motors. The battery delivers the power to the motor, which is either AC or DC. The difference between AC and DC motors is the sort of system that is required to run it in an electric vehicle. An AC motor is generally cheaper but the components required to run it in an electric vehicle such as the controller and inverter makes it more expensive than the DC motor. A unique feature of electric vehicles compared to its gasoline counterparts, the electric vehicle is more simple than the gasoline vehicle.
 In the 1970s, the electric vehicle made its reappearance because of the 1973 OPEC Oil Embargo. Previously, the abundant gasoline had become the prime source of fuel for vehicles. But after the shortage, manufacturers began looking towards electric vehicles again. Despite the improved technology from the 1800s, the electric vehicles faced similar technological flaws such as limited mileage and speed. They could only travel up to 45 miles per hour and had a range of approximately 40 miles.");
-			chat.AppendUserInput("Explain airplanes in great detail");
-			// the following example text is taken from wikipedia
-			chat.AppendExampleChatbotOutput(@"An airplane (American English), or aeroplane (Commonwealth English), informally plane, is a fixed-wing aircraft that is propelled forward by thrust from a jet engine, propeller, or rocket engine. Airplanes come in a variety of sizes, shapes, and wing configurations. The broad spectrum of uses for airplanes includes recreation, transportation of goods and people, military, and research. Worldwide, commercial aviation transports more than four billion passengers annually on airliners Most airplanes are flown by a pilot on board the aircraft, but some are designed to be remotely or computer-controlled such as drones.
+            chat.AppendUserInput("Explain airplanes in great detail");
+            // the following example text is taken from wikipedia
+            chat.AppendExampleChatbotOutput(@"An airplane (American English), or aeroplane (Commonwealth English), informally plane, is a fixed-wing aircraft that is propelled forward by thrust from a jet engine, propeller, or rocket engine. Airplanes come in a variety of sizes, shapes, and wing configurations. The broad spectrum of uses for airplanes includes recreation, transportation of goods and people, military, and research. Worldwide, commercial aviation transports more than four billion passengers annually on airliners Most airplanes are flown by a pilot on board the aircraft, but some are designed to be remotely or computer-controlled such as drones.
 The Wright brothers invented and flew the first airplane in 1903, recognized as ""the first sustained and controlled heavier-than-air powered flight"". Following its limited use in World War I, aircraft technology continued to develop. Airplanes had a presence in all the major battles of World War II. The first jet aircraft was the German Heinkel He 178 in 1939. The first jet airliner, the de Havilland Comet, was introduced in 1952. The Boeing 707, the first widely successful commercial jet, was in commercial service for more than 50 years, from 1958 to at least 2013.
 Etymology and usage
 First attested in English in the late 19th century (prior to the first sustained powered flight), the word airplane, like aeroplane, derives from the French aéroplane, which comes from the Greek ἀήρ (aēr), ""air"" In an example of synecdoche, the word for the wing came to refer to the entire aircraft.
@@ -362,209 +362,266 @@ An aircraft propeller, or airscrew, converts rotary motion from an engine or oth
 Reciprocating engine
 Reciprocating engines in aircraft have three main variants, radial, in-line and flat or horizontally opposed engine. The radial engine is a reciprocating type internal combustion engine configuration in which the cylinders ""radiate"" outward from a central crankcase like the spokes of a wheel and was commonly used for aircraft engines before gas turbine engines became predominant. An inline engine is a reciprocating engine with banks of cylinders, one behind another, rather than rows of cylinders, with each bank having any number of cylinders, but rarely more than six, and may be water-cooled. A flat engine is an internal combustion engine with horizontally-opposed cylinders.");
 
-			chat.AppendUserInput("Explain why the sky is blue in great detail");
-		}
+            chat.AppendUserInput("Explain why the sky is blue in great detail");
+        }
 
-		[TestCase("gpt-3.5-turbo")]
-		[TestCase("gpt-4")]
-		[TestCase("gpt-4-1106-preview")]
-		public void ChatWithNames(string model)
-		{
-			var api = new OpenAI_API.OpenAIAPI();
+        [TestCase("gpt-3.5-turbo")]
+        [TestCase("gpt-4")]
+        [TestCase("gpt-4-1106-preview")]
+        public void ChatWithNames(string model)
+        {
+            var api = new OpenAI_API.OpenAIAPI();
 
-			var chat = api.Chat.CreateConversation();
-			chat.Model = model;
-			chat.RequestParameters.Temperature = 0;
+            var chat = api.Chat.CreateConversation();
+            chat.Model = model;
+            chat.RequestParameters.Temperature = 0;
 
-			chat.AppendSystemMessage("You are the moderator in this workplace chat.  Answer any questions asked of the participants.");
-			chat.AppendUserInputWithName("John", "Hello everyone");
-			chat.AppendUserInputWithName("Edward", "Good morning all");
-			chat.AppendUserInputWithName("Cindy", "Is John here?  Answer yes or no.");
-			chat.AppendExampleChatbotOutput("Yes");
-			chat.AppendUserInputWithName("Cindy", "Is Monica here?  Answer yes or no.");
-			string res = chat.GetResponseFromChatbotAsync().Result;
-			Assert.NotNull(res);
-			Assert.IsNotEmpty(res);
-			Assert.That(res.ToLower().Contains("no"));
-			chat.AppendUserInputWithName("Cindy", "Is Edward here?  Answer yes or no.");
-			res = chat.GetResponseFromChatbotAsync().Result;
-			Assert.NotNull(res);
-			Assert.IsNotEmpty(res);
-			Assert.That(res.ToLower().Contains("yes"));
-		}
+            chat.AppendSystemMessage("You are the moderator in this workplace chat.  Answer any questions asked of the participants.");
+            chat.AppendUserInputWithName("John", "Hello everyone");
+            chat.AppendUserInputWithName("Edward", "Good morning all");
+            chat.AppendUserInputWithName("Cindy", "Is John here?  Answer yes or no.");
+            chat.AppendExampleChatbotOutput("Yes");
+            chat.AppendUserInputWithName("Cindy", "Is Monica here?  Answer yes or no.");
+            string res = chat.GetResponseFromChatbotAsync().Result;
+            Assert.NotNull(res);
+            Assert.IsNotEmpty(res);
+            Assert.That(res.ToLower().Contains("no"));
+            chat.AppendUserInputWithName("Cindy", "Is Edward here?  Answer yes or no.");
+            res = chat.GetResponseFromChatbotAsync().Result;
+            Assert.NotNull(res);
+            Assert.IsNotEmpty(res);
+            Assert.That(res.ToLower().Contains("yes"));
+        }
 
 
-		[TestCase("gpt-3.5-turbo")]
-		[TestCase("gpt-4-1106-preview")]
-		public async Task StreamCompletionEnumerableAsync_ShouldStreamData(string model)
-		{
-			var api = new OpenAI_API.OpenAIAPI();
+        [TestCase("gpt-3.5-turbo")]
+        [TestCase("gpt-4-1106-preview")]
+        public async Task StreamCompletionEnumerableAsync_ShouldStreamData(string model)
+        {
+            var api = new OpenAI_API.OpenAIAPI();
 
-			Assert.IsNotNull(api.Chat);
+            Assert.IsNotNull(api.Chat);
 
-			var req = new ChatRequest()
-			{
-				Model = model,
-				Temperature = 0.2,
-				MaxTokens = 500,
-				Messages = new ChatMessage[] {
-					new ChatMessage(ChatMessageRole.User, "Please explain how mountains are formed in great detail.")
-				}
-			};
+            var req = new ChatRequest()
+            {
+                Model = model,
+                Temperature = 0.2,
+                MaxTokens = 500,
+                Messages = new ChatMessage[] {
+                    new ChatMessage(ChatMessageRole.User, "Please explain how mountains are formed in great detail.")
+                }
+            };
 
-			var chatResults = new List<ChatResult>();
-			await foreach (var res in api.Chat.StreamChatEnumerableAsync(req))
-			{
-				chatResults.Add(res);
-			}
+            var chatResults = new List<ChatResult>();
+            await foreach (var res in api.Chat.StreamChatEnumerableAsync(req))
+            {
+                chatResults.Add(res);
+            }
 
-			Assert.Greater(chatResults.Count, 100);
-			Assert.That(chatResults.Select(cr => cr.Choices[0].Delta.TextContent).Count(c => !string.IsNullOrEmpty(c)) > 50);
-		}
+            Assert.Greater(chatResults.Count, 100);
+            Assert.That(chatResults.Select(cr => cr.Choices[0].Delta.TextContent).Count(c => !string.IsNullOrEmpty(c)) > 50);
+        }
 
-		[TestCase("gpt-3.5-turbo")]
-		[TestCase("gpt-4-1106-preview")]
-		public async Task StreamingConversation(string model)
-		{
-			var api = new OpenAI_API.OpenAIAPI();
+        [TestCase("gpt-3.5-turbo")]
+        [TestCase("gpt-4-1106-preview")]
+        public async Task StreamingConversation(string model)
+        {
+            var api = new OpenAI_API.OpenAIAPI();
 
-			var chat = api.Chat.CreateConversation();
-			chat.RequestParameters.MaxTokens = 500;
-			chat.RequestParameters.Temperature = 0.2;
-			chat.Model = model;
+            var chat = api.Chat.CreateConversation();
+            chat.RequestParameters.MaxTokens = 500;
+            chat.RequestParameters.Temperature = 0.2;
+            chat.Model = model;
 
-			chat.AppendSystemMessage("You are a helpful assistant who is really good at explaining things to students.");
-			chat.AppendUserInput("Please explain to me how mountains are formed in great detail.");
+            chat.AppendSystemMessage("You are a helpful assistant who is really good at explaining things to students.");
+            chat.AppendUserInput("Please explain to me how mountains are formed in great detail.");
 
-			string result = "";
-			int streamParts = 0;
+            string result = "";
+            int streamParts = 0;
 
-			await foreach (var streamResultPart in chat.StreamResponseEnumerableFromChatbotAsync())
-			{
-				result += streamResultPart;
-				streamParts++;
-			}
+            await foreach (var streamResultPart in chat.StreamResponseEnumerableFromChatbotAsync())
+            {
+                result += streamResultPart;
+                streamParts++;
+            }
 
-			Assert.NotNull(result);
-			Assert.IsNotEmpty(result);
-			Assert.That(result.ToLower().Contains("mountains"));
-			Assert.Greater(result.Length, 200);
-			Assert.Greater(streamParts, 5);
+            Assert.NotNull(result);
+            Assert.IsNotEmpty(result);
+            Assert.That(result.ToLower().Contains("mountains"));
+            Assert.Greater(result.Length, 200);
+            Assert.Greater(streamParts, 5);
 
-			Assert.AreEqual(ChatMessageRole.User, chat.Messages.Last().Role);
-			Assert.AreEqual(result, chat.Messages.Last().TextContent);
-		}
+            Assert.AreEqual(ChatMessageRole.User, chat.Messages.Last().Role);
+            Assert.AreEqual(result, chat.Messages.Last().TextContent);
+        }
 
-		[TestCase("gpt-4-1106-preview")]
-		[TestCase("gpt-3.5-turbo-1106")]
-		public void ChatJsonFormat(string model)
-		{
-			var api = new OpenAI_API.OpenAIAPI();
-			ChatRequest chatRequest = new ChatRequest()
-			{
-				Model = model,
-				Temperature = 0.0,
-				MaxTokens = 500,
-				ResponseFormat = ChatRequest.ResponseFormats.JsonObject,
-				Messages = new ChatMessage[] {
-					new ChatMessage(ChatMessageRole.System, "You are a helpful assistant designed to output JSON."),
-					new ChatMessage(ChatMessageRole.User, "Who won the world series in 2020?  Return JSON of a 'wins' dictionary with the year as the numeric key and the winning team as the string value.")
-				}
-			};
+        [TestCase("gpt-4-1106-preview")]
+        [TestCase("gpt-3.5-turbo-1106")]
+        public void ChatJsonFormat(string model)
+        {
+            var api = new OpenAI_API.OpenAIAPI();
+            ChatRequest chatRequest = new ChatRequest()
+            {
+                Model = model,
+                Temperature = 0.0,
+                MaxTokens = 500,
+                ResponseFormat = ChatRequest.ResponseFormats.JsonObject,
+                Messages = new ChatMessage[] {
+                    new ChatMessage(ChatMessageRole.System, "You are a helpful assistant designed to output JSON."),
+                    new ChatMessage(ChatMessageRole.User, "Who won the world series in 2020?  Return JSON of a 'wins' dictionary with the year as the numeric key and the winning team as the string value.")
+                }
+            };
 
-			var results = api.Chat.CreateChatCompletionAsync(chatRequest).Result;
-			Assert.IsNotNull(results);
-			
-			Assert.NotNull(results.Object);
-			Assert.NotNull(results.Choices);
-			Assert.NotZero(results.Choices.Count);
-			Assert.AreEqual(ChatMessageRole.Assistant, results.Choices[0].Message.Role);
-			Assert.That(results.Choices.All(c => c.Message.TextContent.Length > 1));
-			Assert.AreEqual("stop", results.Choices[0].FinishReason);
+            var results = api.Chat.CreateChatCompletionAsync(chatRequest).Result;
+            Assert.IsNotNull(results);
 
-			using (StringReader stringReader = new StringReader(results.Choices[0].Message.TextContent))
-			{
-				using (JsonTextReader jsonReader= new JsonTextReader(stringReader))
-				{
-					var serializer = new JsonSerializer();
-					var json = serializer.Deserialize<Dictionary<string, Dictionary<int, string>>>(jsonReader);
-					Assert.NotNull(json);
-					Assert.IsTrue(json.ContainsKey("wins"));
-					Assert.IsTrue(json["wins"].ContainsKey(2020));
-					Assert.AreEqual("Los Angeles Dodgers", json["wins"][2020]);
-				}
-			}
+            Assert.NotNull(results.Object);
+            Assert.NotNull(results.Choices);
+            Assert.NotZero(results.Choices.Count);
+            Assert.AreEqual(ChatMessageRole.Assistant, results.Choices[0].Message.Role);
+            Assert.That(results.Choices.All(c => c.Message.TextContent.Length > 1));
+            Assert.AreEqual("stop", results.Choices[0].FinishReason);
 
-		}
+            using (StringReader stringReader = new StringReader(results.Choices[0].Message.TextContent))
+            {
+                using (JsonTextReader jsonReader = new JsonTextReader(stringReader))
+                {
+                    var serializer = new JsonSerializer();
+                    var json = serializer.Deserialize<Dictionary<string, Dictionary<int, string>>>(jsonReader);
+                    Assert.NotNull(json);
+                    Assert.IsTrue(json.ContainsKey("wins"));
+                    Assert.IsTrue(json["wins"].ContainsKey(2020));
+                    Assert.AreEqual("Los Angeles Dodgers", json["wins"][2020]);
+                }
+            }
 
-		[Test]
-		public async Task SameSeedShouldBeSameOutput() {
-			var api = new OpenAI_API.OpenAIAPI();
-			ChatRequest chatRequest = new ChatRequest()
-			{
-				Model = Model.ChatGPTTurbo_1106,
-				Temperature = 0,
-				MaxTokens = 100,
-				Seed = 5,
-				Messages = new ChatMessage[] {
-					new ChatMessage(ChatMessageRole.System, "You are a very creative comedian."),
-					new ChatMessage(ChatMessageRole.User, "Tell me a joke.")
-				}
-			};
-			var resultA = await api.Chat.CreateChatCompletionAsync(chatRequest);
-			string jokeA = resultA.ToString();
-			string systemFingerprintA = resultA.SystemFingerprint;
-			Assert.IsNotNull(systemFingerprintA);
-			Assert.IsNotEmpty(systemFingerprintA);
-			Assert.IsNotEmpty(jokeA);
+        }
 
-			var resultB = await api.Chat.CreateChatCompletionAsync(chatRequest);
-			string jokeB = resultB.ToString();
-			string systemFingerprintB = resultB.SystemFingerprint;
-			Assert.IsNotNull(systemFingerprintB);
-			Assert.IsNotEmpty(systemFingerprintB);
-			Assert.IsNotEmpty(jokeB);
+        [Test]
+        public async Task SameSeedShouldBeSameOutput()
+        {
+            var api = new OpenAI_API.OpenAIAPI();
+            ChatRequest chatRequest = new ChatRequest()
+            {
+                Model = Model.ChatGPTTurbo_1106,
+                Temperature = 0,
+                MaxTokens = 100,
+                Seed = 5,
+                Messages = new ChatMessage[] {
+                    new ChatMessage(ChatMessageRole.System, "You are a very creative comedian."),
+                    new ChatMessage(ChatMessageRole.User, "Tell me a joke.")
+                }
+            };
+            var resultA = await api.Chat.CreateChatCompletionAsync(chatRequest);
+            string jokeA = resultA.ToString();
+            string systemFingerprintA = resultA.SystemFingerprint;
+            Assert.IsNotNull(systemFingerprintA);
+            Assert.IsNotEmpty(systemFingerprintA);
+            Assert.IsNotEmpty(jokeA);
 
-			if (systemFingerprintA == systemFingerprintB)
-			{
-				Assert.AreEqual(jokeA, jokeB);
-			}
-		}
+            var resultB = await api.Chat.CreateChatCompletionAsync(chatRequest);
+            string jokeB = resultB.ToString();
+            string systemFingerprintB = resultB.SystemFingerprint;
+            Assert.IsNotNull(systemFingerprintB);
+            Assert.IsNotEmpty(systemFingerprintB);
+            Assert.IsNotEmpty(jokeB);
 
-		[Test]
-		public async Task DifferentSeedShouldBeDifferentOutput()
-		{
-			var api = new OpenAI_API.OpenAIAPI();
-			ChatRequest chatRequest = new ChatRequest()
-			{
-				Model = Model.ChatGPTTurbo_1106,
-				Temperature = 0,
-				MaxTokens = 100,
-				Seed = 5,
-				Messages = new ChatMessage[] {
-					new ChatMessage(ChatMessageRole.System, "You are a very creative comedian."),
-					new ChatMessage(ChatMessageRole.User, "Tell me a joke.")
-				}
-			};
-			var resultA = await api.Chat.CreateChatCompletionAsync(chatRequest);
-			string jokeA = resultA.ToString();
-			string systemFingerprintA = resultA.SystemFingerprint;
-			Assert.IsNotNull(systemFingerprintA);
-			Assert.IsNotEmpty(systemFingerprintA);
-			Assert.IsNotEmpty(jokeA);
+            if (systemFingerprintA == systemFingerprintB)
+            {
+                Assert.AreEqual(jokeA, jokeB);
+            }
+        }
 
-			chatRequest.Seed = 99;
-			var resultB = await api.Chat.CreateChatCompletionAsync(chatRequest);
-			string jokeB = resultB.ToString();
-			string systemFingerprintB = resultB.SystemFingerprint;
-			Assert.IsNotNull(systemFingerprintB);
-			Assert.IsNotEmpty(systemFingerprintB);
-			Assert.IsNotEmpty(jokeB);
+        [Test]
+        public async Task DifferentSeedShouldBeDifferentOutput()
+        {
+            var api = new OpenAI_API.OpenAIAPI();
+            ChatRequest chatRequest = new ChatRequest()
+            {
+                Model = Model.ChatGPTTurbo_1106,
+                Temperature = 0,
+                MaxTokens = 100,
+                Seed = 5,
+                Messages = new ChatMessage[] {
+                    new ChatMessage(ChatMessageRole.System, "You are a very creative comedian."),
+                    new ChatMessage(ChatMessageRole.User, "Tell me a joke.")
+                }
+            };
+            var resultA = await api.Chat.CreateChatCompletionAsync(chatRequest);
+            string jokeA = resultA.ToString();
+            string systemFingerprintA = resultA.SystemFingerprint;
+            Assert.IsNotNull(systemFingerprintA);
+            Assert.IsNotEmpty(systemFingerprintA);
+            Assert.IsNotEmpty(jokeA);
 
-			if (systemFingerprintA == systemFingerprintB)
-			{
-				Assert.AreNotEqual(jokeA, jokeB);
-			}
-		}
-	}
+            chatRequest.Seed = 99;
+            var resultB = await api.Chat.CreateChatCompletionAsync(chatRequest);
+            string jokeB = resultB.ToString();
+            string systemFingerprintB = resultB.SystemFingerprint;
+            Assert.IsNotNull(systemFingerprintB);
+            Assert.IsNotEmpty(systemFingerprintB);
+            Assert.IsNotEmpty(jokeB);
+
+            if (systemFingerprintA == systemFingerprintB)
+            {
+                Assert.AreNotEqual(jokeA, jokeB);
+            }
+        }
+
+        //#!! https://github.com/OkGoDoIt/OpenAI-API-dotnet/compare/master...tangrui1992:OpenAI-API-dotnet-fork20240519:master
+
+        [Test]
+        public void ChatMessageSerializationShouldDeserialzeAsExpected()
+        {
+            var msg = new ChatMessage()
+            {
+                Role = ChatMessageRole.User,
+                TextContent = "This is a test"
+            };
+            var jmsg = JsonConvert.SerializeObject(msg);
+            var deserializedMsg = JsonConvert.DeserializeObject<ChatMessage>(jmsg);
+
+            Assert.IsNotNull(deserializedMsg);
+            Assert.IsTrue(msg.TextContent.Equals(deserializedMsg.TextContent));
+            Assert.IsTrue(deserializedMsg.Images.Count == msg.Images.Count);
+        }
+
+        [Test]
+        public void ChatMessagesContentSerializationShouldDeserialzeAsExpected()
+        {
+
+            var msg = new ChatMessage(ChatMessageRole.User, "What is this image about?", new ChatMessage.ImageInput[] { new ChatMessage.ImageInput("https://xyz.com/image.png") });
+
+            var jmsg = JsonConvert.SerializeObject(msg);
+            var deserializedMsg = JsonConvert.DeserializeObject<ChatMessage>(jmsg);
+
+            Assert.IsNotNull(deserializedMsg);
+            Assert.IsTrue(msg.TextContent.Equals(deserializedMsg.TextContent));
+            Assert.IsTrue(deserializedMsg.Images.Count == msg.Images.Count);
+            Assert.IsTrue(deserializedMsg.Images[0].Url.Equals(msg.Images[0].Url));
+        }
+
+        [Test]
+        public void ChatMessagesListSerializationShouldDeserialzeAsExpected()
+        {
+            var messages = new List<ChatMessage>();
+            var msg1 = new ChatMessage(ChatMessageRole.User, "What is this image about?", new ChatMessage.ImageInput[] { new ChatMessage.ImageInput("https://xyz.com/image.png") });
+            messages.Add(msg1);
+            var msg2 = new ChatMessage(ChatMessageRole.User, "And what is this image about?", new ChatMessage.ImageInput[] { new ChatMessage.ImageInput("https://xyz.com/image2.png") });
+            messages.Add(msg2);
+
+            var jmsgs = JsonConvert.SerializeObject(messages);
+            var deserializedMessagesList = JsonConvert.DeserializeObject<List<ChatMessage>>(jmsgs);
+
+            Assert.IsNotNull(deserializedMessagesList);
+            Assert.IsTrue(deserializedMessagesList.Count == messages.Count);
+            Assert.IsTrue(deserializedMessagesList[0].TextContent.Equals(messages[0].TextContent));
+            Assert.IsTrue(deserializedMessagesList[0].Images.Count == messages[0].Images.Count);
+            Assert.IsTrue(deserializedMessagesList[0].Images[0].Url.Equals(messages[0].Images[0].Url));
+
+            Assert.IsTrue(deserializedMessagesList[1].TextContent.Equals(messages[1].TextContent));
+            Assert.IsTrue(deserializedMessagesList[1].Images.Count == messages[1].Images.Count);
+            Assert.IsTrue(deserializedMessagesList[1].Images[0].Url.Equals(messages[1].Images[0].Url));
+        }
+    }
 }

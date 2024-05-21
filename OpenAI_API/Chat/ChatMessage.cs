@@ -167,10 +167,13 @@ namespace OpenAI_API.Chat
 
 				set
 				{
-					text = value;
-					image = null;
-					Type = "text";
-				}
+                    if (value != null) //#!! https://github.com/OkGoDoIt/OpenAI-API-dotnet/compare/master...tangrui1992:OpenAI-API-dotnet-fork20240519:master
+                    {
+                        text = value;
+                        image = null;
+                        Type = "text";
+                    }
+                }
 			}
 
 			/// <summary>
@@ -189,9 +192,12 @@ namespace OpenAI_API.Chat
 
 				set
 				{
-					image = value;
-					text = null;
-					Type = "image_url";
+					if (value != null) #!!
+					{
+						image = value;
+						text = null;
+						Type = "image_url";
+					}
 				}
 			}
 
@@ -320,8 +326,9 @@ namespace OpenAI_API.Chat
 			public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 			{
 				JToken token = JToken.Load(reader);
-				if (token.Type == JTokenType.Object)
-				{
+                //if (token.Type == JTokenType.Object)
+                if (token.Type == JTokenType.Object || token.Type == JTokenType.Array) //#!! https://github.com/OkGoDoIt/OpenAI-API-dotnet/compare/master...tangrui1992:OpenAI-API-dotnet-fork20240519:master
+                {
 					return token.ToObject<IList<ContentItem>>();
 				}
 				else if (token.Type == JTokenType.String)
