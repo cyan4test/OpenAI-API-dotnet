@@ -192,7 +192,7 @@ namespace OpenAI_API.Chat
 
 				set
 				{
-					if (value != null) #!!
+					if (value != null) //#!!
 					{
 						image = value;
 						text = null;

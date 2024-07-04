@@ -38,13 +38,29 @@ namespace OpenAI_API
         }
     }
 
+    /// <summary>
+    /// callback with http request result
+    /// </summary>
+    public delegate void HttpRequestCallback(string resultAsString, string url = null, HttpMethod verb = null, object postData = null); //#!!
+
 
     /// <summary>
     /// A base object for any OpenAI API endpoint, encompassing common functionality
     /// </summary>
     public abstract class EndpointBase
 	{
-		private const string UserAgent = "okgodoit/dotnet_openai_api";
+        /// <summary>
+        /// global callback with http request result
+        /// </summary>
+        public static HttpRequestCallback _httpRequestCallback; //#!!
+
+        /// <summary>
+        /// _sbReceivedDate
+        /// </summary>	
+		public StringBuilder _sbReceivedData = new StringBuilder();//#!!
+
+
+        private const string UserAgent = "okgodoit/dotnet_openai_api";
 
 		/// <summary>
 		/// The internal reference to the API, mostly used for authentication
@@ -169,7 +185,9 @@ namespace OpenAI_API
 				try
 				{
 					resultAsString = await response.Content.ReadAsStringAsync();
-				}
+                    if (_httpRequestCallback != null) //#!!
+                        _httpRequestCallback(resultAsString, url, verb, postData); //#!!
+                }
 				catch (Exception readError)
 				{
 					resultAsString = "Additionally, the following error was thrown when attemping to read the response content: " + readError.ToString();
@@ -215,8 +233,11 @@ namespace OpenAI_API
 		internal async Task<string> HttpGetContent(string url = null, HttpMethod verb = null, object postData = null)
 		{
 			var response = await HttpRequestRaw(url, verb, postData);
-			return await response.Content.ReadAsStringAsync();
-		}
+			var resultAsString = await response.Content.ReadAsStringAsync();
+            if (_httpRequestCallback != null) //#!!
+                _httpRequestCallback(resultAsString, url, verb, postData); //#!!
+			return resultAsString;
+        }
 
 		/// <summary>
 		/// Sends an HTTP request and return the raw content stream of the response without parsing, and does error handling.
@@ -247,6 +268,9 @@ namespace OpenAI_API
 			var response = await HttpRequestRaw(url, verb, postData);
 			string resultAsString = await response.Content.ReadAsStringAsync();
 
+			if (_httpRequestCallback != null) //#!!
+                _httpRequestCallback(resultAsString, url, verb, postData); //#!!
+            
 			var res = JsonConvert.DeserializeObject<T>(resultAsString);
 			try
 			{
@@ -433,7 +457,8 @@ namespace OpenAI_API
 				string line;
 				while ((line = await reader.ReadLineAsync()) != null)
 				{
-					resultAsString += line + Environment.NewLine;
+					_sbReceivedData.AppendLine(line);//#!!
+                    resultAsString += line + Environment.NewLine;
 
 					if (line.StartsWith("data:"))
 						line = line.Substring("data:".Length);
