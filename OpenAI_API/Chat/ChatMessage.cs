@@ -82,7 +82,9 @@ namespace OpenAI_API.Chat
 		/// </summary>
 		[JsonProperty("content")]
 		[JsonConverter(typeof(ContentDataConverter))]
-		internal IList<ContentItem> ContentItems
+        //internal IList<ContentItem> ContentItems
+
+        public IList<ContentItem> ContentItems //#!! make public
 		{
 			get
 			{
@@ -247,12 +249,19 @@ namespace OpenAI_API.Chat
 			[JsonProperty("detail")]
 			public string Detail { get; set; } = "auto";
 
-			/// <summary>
-			/// Instantiates a new ImageInput object with the given url
-			/// </summary>
-			/// <param name="url">A link to the image</param>
-			/// <param name="detail">By controlling the detail parameter, which has three options, low, high, or auto, you have control over how the model processes the image and generates its textual understanding</param>
-			public ImageInput(string url, string detail = "auto")
+            /// <summary>
+            /// for Deserialize
+            /// </summary>
+			public ImageInput() //#!!
+			{
+
+			}
+            /// <summary>
+            /// Instantiates a new ImageInput object with the given url
+            /// </summary>
+            /// <param name="url">A link to the image</param>
+            /// <param name="detail">By controlling the detail parameter, which has three options, low, high, or auto, you have control over how the model processes the image and generates its textual understanding</param>
+            public ImageInput(string url, string detail = "auto")
 			{
 				this.Url = url;
 				this.Detail = detail;

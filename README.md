@@ -3,6 +3,7 @@ Changes:
 + GPT4 Vision => GPT4o (https://github.com/glienard/OpenAI-API-dotnet)
 + fixes from https://github.com/tangrui1992/OpenAI-API-dotnet-fork20240519
 
+
 ----
 
 # C#/.NET SDK for accessing the OpenAI APIs, including GPT-3.5/4, GPT-3.5/4-Turbo, and DALL-E 2/3

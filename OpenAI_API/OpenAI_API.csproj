@@ -31,6 +31,8 @@
 
 		<Deterministic>true</Deterministic>
 
+		<Configurations>Debug;Release;Debug_OPENAI_NEW</Configurations>
+
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -38,6 +40,10 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <DebugType>portable</DebugType>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OPENAI_NEW|AnyCPU'">
 	  <DebugType>portable</DebugType>
 	</PropertyGroup>
 

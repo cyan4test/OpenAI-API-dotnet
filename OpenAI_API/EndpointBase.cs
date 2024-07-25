@@ -173,7 +173,10 @@ namespace OpenAI_API
 					var stringContent = new StringContent(jsonContent, UnicodeEncoding.UTF8, "application/json");
 					req.Content = stringContent;
 				}
-			}
+
+                if (_httpRequestCallback != null) //#!!
+                    _httpRequestCallback(null, url, verb, postData); //#!!
+            }
 			response = await client.SendAsync(req, streaming ? HttpCompletionOption.ResponseHeadersRead : HttpCompletionOption.ResponseContentRead);
 
 			if (response.IsSuccessStatusCode)
